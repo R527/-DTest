@@ -122,6 +122,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
                 }
             } else if (isFirstJump && jumpAction.triggered) {
+                rb.velocity = Vector3.zero;
                 isFirstJump = false;
 
                 Vector3 force = new Vector3(input.normalized.x * moveSpeed, jumpPower, input.normalized.z * moveSpeed);
