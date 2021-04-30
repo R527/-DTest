@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 {
     //class
     public GameManager gameManager;
-    public PlayerStatus playerStatus;
+    public PlayerStatusSO playerStatusSo;
     public LifeGaugeUpdate lifeGaugeUpdate;
 
     //myComponents
@@ -18,18 +18,25 @@ public class PlayerController : MonoBehaviourPunCallbacks
     Vector3 input;
     PhotonTransformViewClassic photonTransformViewClassic;
 
+    //Input
+    PlayerInput playerInput;
+    InputAction moveAction;
+    InputAction jumpAction;
+    InputAction runAction;
+
+    //PlayerStatus
+    public int playerHp;
     //etc
     public Vector3 velocity;
     [SerializeField] bool isGrounded;
     [SerializeField] bool isCanControl;
     [SerializeField] float moveSpeed = 2f;
+    [SerializeField] float runSpeed = 4f;
     [SerializeField] float jumpPower = 6f;
     [SerializeField] float doubleJumpPower = 5f;
     [SerializeField] bool isFirstJump;
 
-    PlayerInput playerInput;
-    InputAction moveAction;
-    InputAction jumpAction;
+
 
 
     // Start is called before the first frame update
@@ -45,7 +52,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
         lifeGaugeUpdate = GameObject.FindWithTag("Life").GetComponent<LifeGaugeUpdate>();
         moveAction = playerInput.currentActionMap.FindAction("Move");
         jumpAction = playerInput.currentActionMap.FindAction("Jump");
+        runAction = playerInput.currentActionMap.FindAction("Run");
         isCanControl = true;
+
+        SetUpPlayerStatus();
     }
 
     // Update is called once per frame
@@ -53,16 +63,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         if (gameManager == null) return;
         if (gameManager.isCountDown) return;
-
         if (!isCanControl) return;
 
         CheckGameOver();
-
         CheckGround();
-
-        Move();
-
-
+        Action();
     }
 
     private void FixedUpdate() {
@@ -75,74 +80,80 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
 
     void CheckGround() {
-        if (isGrounded) {
-            return;
-        }
+        if (isGrounded) return;
 
         if (animator.GetFloat(ANIMATOR_TYPE.JumpPower.ToString()) <= -0.1f && Physics.CheckSphere(rb.position, myCollider.radius - 0.1f, LayerMask.GetMask(OBJECT_TAG_TYPE.Ground.ToString()))) {
-            Debug.Log("CheckGround");
             isGrounded = true;
             velocity.y = 0f;
         } else {
             isGrounded = false;
-            //isFirstJump = false;;
         }
         animator.SetBool(ANIMATOR_TYPE.IsGrounded.ToString(), isGrounded);
     }
 
-    void Move() {
-        if (gameManager.GameOver) return;
+    void Action() {
+        if (photonView.IsMine) {
 
-        if (isGrounded) {
+            if (gameManager.GameOver) return;
+            if (isGrounded) velocity = Vector3.zero;
+        
+            Move();
+            Jump();
+        }
+    }
+
+    void Move() {
+        float x = moveAction.ReadValue<Vector2>().x;
+        float z = moveAction.ReadValue<Vector2>().y;
+
+        input = new Vector3(x, 0f, z);
+
+        if (Mathf.Abs(x) > 0.1 || Mathf.Abs(z) > 0.1) {
+            //走る
+            if (Keyboard.current.leftShiftKey.isPressed) {
+                animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), runSpeed);
+                velocity = new Vector3(input.normalized.x * runSpeed, 0f, input.normalized.z * runSpeed);
+                //歩く
+            } else {
+                animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), Mathf.Max(Mathf.Abs(x), Mathf.Abs(z)));
+                velocity = new Vector3(input.normalized.x * moveSpeed, 0f, input.normalized.z * moveSpeed);
+            }
+            //止まる
+        } else {
+            animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), 0);
             velocity = Vector3.zero;
         }
+        photonTransformViewClassic.SetSynchronizedValues(velocity, 0);
+    }
 
-        //横移動
-        if (photonView.IsMine) {
-            float x = moveAction.ReadValue<Vector2>().x;
-            float z = moveAction.ReadValue<Vector2>().y;
 
-            if (Mathf.Abs(x) > 0.1 || Mathf.Abs(z) > 0.1) {
-                animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), Mathf.Max(Mathf.Abs(x), Mathf.Abs(z)));
-            } else {
-                animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), 0);
-                //velocity = Vector3.zero;
-            }
+    void Jump() {
 
-            //ジャンプ
-            if (isGrounded) {
-                if (jumpAction.triggered) {
-                    isGrounded = false;
-                    animator.SetBool(ANIMATOR_TYPE.IsGrounded.ToString(), isGrounded);
+        //ジャンプ
+        if (isGrounded) {
+            if (jumpAction.triggered) {
+                isGrounded = false;
+                animator.SetBool(ANIMATOR_TYPE.IsGrounded.ToString(), isGrounded);
 
-                    isFirstJump = true;
-                    Vector3 force = new Vector3(input.normalized.x * moveSpeed, jumpPower, input.normalized.z * moveSpeed);
-                    rb.AddForce(force, ForceMode.Impulse);
-                    animator.SetTrigger(ANIMATOR_TYPE.Jump.ToString());
-
-                }
-            } else if (isFirstJump && jumpAction.triggered) {
-                rb.velocity = Vector3.zero;
-                isFirstJump = false;
-
+                isFirstJump = true;
                 Vector3 force = new Vector3(input.normalized.x * moveSpeed, jumpPower, input.normalized.z * moveSpeed);
-                rb.AddForce(force,ForceMode.Impulse);
+                rb.AddForce(force, ForceMode.Impulse);
+                animator.SetTrigger(ANIMATOR_TYPE.Jump.ToString());
             }
+        } else if (isFirstJump && jumpAction.triggered) {
+            rb.velocity = Vector3.zero;
+            isFirstJump = false;
 
-            animator.SetFloat(ANIMATOR_TYPE.JumpPower.ToString(), rb.velocity.y);
-
-            input = new Vector3(x, 0f, z);
-            //velocity = new Vector3(inputPosX * moveSpeed, 0f, inputPosZ * moveSpeed);
-            velocity = new Vector3(input.normalized.x * moveSpeed, 0f, input.normalized.z * moveSpeed);
-            photonTransformViewClassic.SetSynchronizedValues(velocity, 0);
+            Vector3 force = new Vector3(input.normalized.x * moveSpeed, doubleJumpPower, input.normalized.z * moveSpeed);
+            rb.AddForce(force, ForceMode.Impulse);
         }
+        animator.SetFloat(ANIMATOR_TYPE.JumpPower.ToString(), rb.velocity.y);
     }
 
-
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(transform.position + Vector3.up * 0.1f, transform.position + Vector3.down * 0.2f);
-    }
+    //private void OnDrawGizmos() {
+    //    Gizmos.color = Color.yellow;
+    //    Gizmos.DrawLine(transform.position + Vector3.up * 0.1f, transform.position + Vector3.down * 0.2f);
+    //}
 
     void CheckGameOver() {
         if (gameManager.GameOver) {
@@ -156,11 +167,17 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
 
     public void TakeDamege(int dmg) {
-        if(playerStatus.SetHp(playerStatus.GetHp() - dmg) <= 0) {
-            gameManager.EndGame();
-        }
-        lifeGaugeUpdate.UpdateLifeGauge();
+        if (SetHp(playerHp - dmg) <= 0) gameManager.EndGame();
+        StartCoroutine(lifeGaugeUpdate.UpdateLifeGauge());
     }
 
+    int SetHp(int hp) {
+        if (hp <= 0) hp = 0;
+        return playerHp = hp;
+    }
 
+    void SetUpPlayerStatus() {
+        playerHp = playerStatusSo.playerStatusList[0].hp;
+        StartCoroutine(lifeGaugeUpdate.UpdateLifeGauge());
+    }
 }

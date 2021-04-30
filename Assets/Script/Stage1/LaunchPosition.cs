@@ -22,9 +22,9 @@ public class LaunchPosition : MonoBehaviour
         if (gameManager.isCountDown || gameManager.GameOver) return;
 
         checkTime += Time.deltaTime;
-        if(checkTime>=fireInterval) {
-            Fire();
+        if (checkTime >= fireInterval) { 
             checkTime = 0f;
+            Fire();
         }
     }
 

@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] public bool GameOver { get; set; }
     [SerializeField] GameManagementData gameManagementData;
     public bool isCountDown { get; set;}
-    public PlayerStatus playerStatus;
+    public PlayerStatusSO playerStatus;
 
     public TextMeshProUGUI countDownText;
     public Button startBtn;
@@ -39,10 +39,8 @@ public class GameManager : MonoBehaviour
     }
 
     public void StartGame() {
-        playerStatus.Reset();
         PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions(), TypedLobby.Default);
         SceneManager.LoadScene("Stage1");
-
         var pos = new Vector3(0, 0, 0);
         PhotonNetwork.Instantiate("Prefabs/Player", pos, Quaternion.identity);
     }

@@ -15,7 +15,8 @@ public class CannonRotation : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.FindWithTag(OBJECT_TAG_TYPE.Player.ToString()).transform;
+        
+        //player = GameObject.FindWithTag(OBJECT_TAG_TYPE.Player.ToString()).transform;
         TryGetComponent(out rb);
         viewingQuaternion = Quaternion.identity;
     }
