@@ -1200,7 +1200,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timer: {fileID: 0}
   gameManagementData: {fileID: 11400000, guid: a2d1ff96399b2374992b6ce5ce4b38de, type: 2}
-  playerStatus: {fileID: 11400000, guid: 15ec7565f5a694044bbe3601117a0d22, type: 2}
+  playerStatus: {fileID: 0}
   countDownText: {fileID: 0}
   startBtn: {fileID: 645724957}
   gameOverPanel: {fileID: 0}

@@ -4,9 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
-
 using Photon.Realtime;
+
+
 public class NetWorkManager : MonoBehaviourPunCallbacks {
+
     public static NetWorkManager instance;
 
     private void Awake() {
@@ -30,18 +32,15 @@ public class NetWorkManager : MonoBehaviourPunCallbacks {
 
         PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions(), TypedLobby.Default);
         SceneManager.LoadScene("Stage1");
-
-
-
     }
 
 
     public override void OnJoinedRoom() {
         base.OnJoinedRoom();
+        Debug.Log("OnJoinedRoom");
 
         var pos = new Vector3(0, 0, 0);
         PhotonNetwork.Instantiate("Prefabs/Player", pos, Quaternion.identity);
-        Debug.Log("OnJoinedRoom");
     }
 
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Photon.Pun;
+using Cinemachine;
+
 
 public class PlayerController : MonoBehaviourPunCallbacks
 {
@@ -11,12 +13,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public PlayerStatusSO playerStatusSo;
     public LifeGaugeUpdate lifeGaugeUpdate;
 
+
     //myComponents
     Rigidbody rb;
     CapsuleCollider myCollider;
     Animator animator;
     Vector3 input;
     PhotonTransformViewClassic photonTransformViewClassic;
+    CinemachineVirtualCamera cinemachineVirtualCamera;
 
     //Input
     PlayerInput playerInput;
@@ -36,9 +40,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] float doubleJumpPower = 5f;
     [SerializeField] bool isFirstJump;
 
-
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -47,7 +48,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         TryGetComponent(out myCollider);
         TryGetComponent(out playerInput);
         TryGetComponent(out photonTransformViewClassic);
-
+        TryGetComponent(out  cinemachineVirtualCamera);
+        cinemachineVirtualCamera = gameObject.GetComponentInChildren<CinemachineVirtualCamera>();
         gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
         lifeGaugeUpdate = GameObject.FindWithTag("Life").GetComponent<LifeGaugeUpdate>();
         moveAction = playerInput.currentActionMap.FindAction("Move");
@@ -91,6 +93,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         animator.SetBool(ANIMATOR_TYPE.IsGrounded.ToString(), isGrounded);
     }
 
+
     void Action() {
         if (photonView.IsMine) {
 
@@ -103,19 +106,18 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
 
     void Move() {
-        float x = moveAction.ReadValue<Vector2>().x;
-        float z = moveAction.ReadValue<Vector2>().y;
+        float posX = moveAction.ReadValue<Vector2>().x;
+        float posZ = moveAction.ReadValue<Vector2>().y;
 
-        input = new Vector3(x, 0f, z);
-
-        if (Mathf.Abs(x) > 0.1 || Mathf.Abs(z) > 0.1) {
+        input = new Vector3(posX, 0f, posZ);
+        if (Mathf.Abs(posX) > 0.1 || Mathf.Abs(posZ) > 0.1) {
             //走る
             if (Keyboard.current.leftShiftKey.isPressed) {
                 animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), runSpeed);
                 velocity = new Vector3(input.normalized.x * runSpeed, 0f, input.normalized.z * runSpeed);
                 //歩く
             } else {
-                animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), Mathf.Max(Mathf.Abs(x), Mathf.Abs(z)));
+                animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), Mathf.Max(Mathf.Abs(posX), Mathf.Abs(posZ)));
                 velocity = new Vector3(input.normalized.x * moveSpeed, 0f, input.normalized.z * moveSpeed);
             }
             //止まる
@@ -123,6 +125,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
             animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), 0);
             velocity = Vector3.zero;
         }
+        float horizontal = cinemachineVirtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value;
+        Debug.Log("horizontal" + horizontal);
+        Vector3 rotation = new Vector3(0f, horizontal,0f);
+        Debug.Log("rotation" + rotation);
+
+        transform.rotation = Quaternion.AngleAxis(horizontal, new Vector3(0f, 1f, 0f));
+        Debug.Log("transform.rotation" + transform.rotation);
+
         photonTransformViewClassic.SetSynchronizedValues(velocity, 0);
     }
 
@@ -150,10 +160,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         animator.SetFloat(ANIMATOR_TYPE.JumpPower.ToString(), rb.velocity.y);
     }
 
-    //private void OnDrawGizmos() {
-    //    Gizmos.color = Color.yellow;
-    //    Gizmos.DrawLine(transform.position + Vector3.up * 0.1f, transform.position + Vector3.down * 0.2f);
-    //}
 
     void CheckGameOver() {
         if (gameManager.GameOver) {
@@ -168,7 +174,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void TakeDamege(int dmg) {
         if (SetHp(playerHp - dmg) <= 0) gameManager.EndGame();
-        StartCoroutine(lifeGaugeUpdate.UpdateLifeGauge());
+        lifeGaugeUpdate.UpdateLifeGauge();
     }
 
     int SetHp(int hp) {
@@ -178,6 +184,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     void SetUpPlayerStatus() {
         playerHp = playerStatusSo.playerStatusList[0].hp;
-        StartCoroutine(lifeGaugeUpdate.UpdateLifeGauge());
+        lifeGaugeUpdate.UpdateLifeGauge();
     }
 }

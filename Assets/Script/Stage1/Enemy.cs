@@ -4,59 +4,63 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-namespace test {
-    public class Enemy : MonoBehaviour {
+public class Enemy : MonoBehaviour {
 
-        public GameManager gameManager;
+    public GameManager gameManager;
 
-        public int attackPower = 2;
-        public PlayerController playerController;
+    public int attackPower = 2;
+    public PlayerController playerController;
 
 
-        NavMeshAgent navMeshAgent;
-        Transform playerTrn;
-        Animator animator;
-        bool canControl;
+    NavMeshAgent navMeshAgent;
+    Transform playerTrn;
+    Animator animator;
+    bool canControl;
 
-        // Start is called before the first frame update
-        void Start() {
-            TryGetComponent(out navMeshAgent);
-            playerTrn = GameObject.Find(OBJECT_TAG_TYPE.Player.ToString()).transform;
-            TryGetComponent(out animator);
-            canControl = true;
+    // Start is called before the first frame update
+    void Start() {
+        TryGetComponent(out navMeshAgent);
+        playerTrn = GameObject.Find(OBJECT_TAG_TYPE.Player.ToString()).transform;
+        TryGetComponent(out animator);
+        canControl = true;
+    }
+
+    // Update is called once per frame
+    void Update() {
+        if (gameManager.isCountDown) return;
+        if (!canControl) return;
+
+        if (gameManager.GameOver) {
+            navMeshAgent.isStopped = true;
+            animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), 0f);
+            canControl = false;
+            return;
         }
 
-        // Update is called once per frame
-        void Update() {
-            if (gameManager.isCountDown) return;
+        //目的地の再設定
+        navMeshAgent.SetDestination(playerTrn.position);
+        //プレイヤーと敵キャラくたのー距離
+        var characterDistance = Vector2.Distance(new Vector2(playerTrn.position.x, playerTrn.position.z), new Vector2(transform.position.x, transform.position.z));
 
-            if (!canControl) return;
-
-            if (gameManager.GameOver) {
+        if (navMeshAgent.isStopped && characterDistance > 2f) {
+            navMeshAgent.isStopped = false;
+        } else {
+            if (characterDistance > 0.8f) {
+                navMeshAgent.isStopped = false;
+                animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), navMeshAgent.speed);
+            } else {
                 navMeshAgent.isStopped = true;
                 animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), 0f);
-                canControl = false;
-                return;
-            }
-
-            //目的地の再設定
-            navMeshAgent.SetDestination(playerTrn.position);
-            //プレイヤーと敵キャラくたのー距離
-            var characterDistance = Vector2.Distance(new Vector2(playerTrn.position.x, playerTrn.position.z), new Vector2(transform.position.x, transform.position.z));
-
-            if (navMeshAgent.isStopped && characterDistance > 2f) {
-                navMeshAgent.isStopped = false;
-            } else {
-                if (characterDistance > 0.8f) {
-                    navMeshAgent.isStopped = false;
-                    animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), navMeshAgent.speed);
-                } else {
-                    navMeshAgent.isStopped = true;
-                    animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), 0f);
-                    playerController.TakeDamege(attackPower);
-                }
             }
         }
     }
+
+
+    private void OnCollisionEnter(Collision collision) {
+        collision.gameObject.GetComponent<PlayerController>().TakeDamege(attackPower);
+    }
+
+
 }
+
 

@@ -21,7 +21,6 @@ public class Bullet : MonoBehaviour
         }
 
         if (collision.gameObject.CompareTag(OBJECT_TAG_TYPE.Player.ToString())) {
-            Debug.Log("OnCollisionEnter");
             collision.gameObject.GetComponent<PlayerController>().TakeDamege(attackPower);
             collision.gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * 5f, ForceMode.VelocityChange);
         }
