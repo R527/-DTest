@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public GameManager gameManager;
     public PlayerStatusSO playerStatusSo;
     public LifeGaugeUpdate lifeGaugeUpdate;
-
+    
 
     //myComponents
     Rigidbody rb;
@@ -20,7 +20,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
     Animator animator;
     Vector3 input;
     PhotonTransformViewClassic photonTransformViewClassic;
-    CinemachineVirtualCamera cinemachineVirtualCamera;
 
     //Input
     PlayerInput playerInput;
@@ -30,6 +29,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     //PlayerStatus
     public int playerHp;
+
+    //Camera
+    public Transform mainCameraTrn;
+    public CinemachineVirtualCamera cinemachineVirtualCamera;
     //etc
     public Vector3 velocity;
     [SerializeField] bool isGrounded;
@@ -48,8 +51,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
         TryGetComponent(out myCollider);
         TryGetComponent(out playerInput);
         TryGetComponent(out photonTransformViewClassic);
-        TryGetComponent(out  cinemachineVirtualCamera);
-        cinemachineVirtualCamera = gameObject.GetComponentInChildren<CinemachineVirtualCamera>();
+
+        mainCameraTrn = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        cinemachineVirtualCamera = GameObject.FindGameObjectWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
+        if (photonView.IsMine) {
+            cinemachineVirtualCamera.Follow = transform;
+            cinemachineVirtualCamera.LookAt = transform;
+        }
+
         gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
         lifeGaugeUpdate = GameObject.FindWithTag("Life").GetComponent<LifeGaugeUpdate>();
         moveAction = playerInput.currentActionMap.FindAction("Move");
@@ -73,11 +82,40 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
 
     private void FixedUpdate() {
-        if(!Mathf.Approximately(input.x,0f) || !Mathf.Approximately(input.z, 0f)) {
-            rb.MoveRotation(Quaternion.LookRotation(input.normalized));
+        if (!Mathf.Approximately(input.x, 0f) || !Mathf.Approximately(input.z, 0f)) {
+            rb.MoveRotation(Quaternion.LookRotation(transform.forward + input.normalized));
         }
-        if(velocity.magnitude > 0f) {
-            rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
+
+        //
+        if (velocity.magnitude > 0f) {
+            float speed = 0f;
+            if (Keyboard.current.leftShiftKey.isPressed) {
+                speed = 4f;
+            } else {
+                speed = 2f;
+            }
+            float vel = speed * Time.fixedDeltaTime;
+
+            //横軸
+            if (velocity.x >= 0.1) {
+                Debug.Log("右");
+                rb.MovePosition(rb.position + transform.right * vel);
+            } else if(velocity.x <= -0.1) {
+                Debug.Log("左");
+                rb.MovePosition(rb.position - transform.right * vel);
+            }
+            //縦軸
+            if (velocity.z >= 0.1) {
+                Debug.Log("前");
+
+                rb.MovePosition(rb.position + transform.forward * vel);
+            } else if (velocity.z <= -0.1) {
+                Debug.Log("うしろ");
+                rb.MovePosition(rb.position - transform.forward * vel);
+            }
+
+            //rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
+            //Debug.Log("rb.position + velocity * Time.fixedDeltaTime" + rb.position + velocity * Time.fixedDeltaTime);
         }
     }
 
@@ -112,7 +150,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         input = new Vector3(posX, 0f, posZ);
         if (Mathf.Abs(posX) > 0.1 || Mathf.Abs(posZ) > 0.1) {
             //走る
-            if (Keyboard.current.leftShiftKey.isPressed) {
+            if (Keyboard.current.leftShiftKey.isPressed && Keyboard.current.upArrowKey.isPressed) {
                 animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), runSpeed);
                 velocity = new Vector3(input.normalized.x * runSpeed, 0f, input.normalized.z * runSpeed);
                 //歩く
@@ -125,14 +163,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
             animator.SetFloat(ANIMATOR_TYPE.Speed.ToString(), 0);
             velocity = Vector3.zero;
         }
-        float horizontal = cinemachineVirtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value;
-        Debug.Log("horizontal" + horizontal);
-        Vector3 rotation = new Vector3(0f, horizontal,0f);
-        Debug.Log("rotation" + rotation);
 
-        transform.rotation = Quaternion.AngleAxis(horizontal, new Vector3(0f, 1f, 0f));
-        Debug.Log("transform.rotation" + transform.rotation);
-
+        transform.rotation = mainCameraTrn.transform.rotation;
         photonTransformViewClassic.SetSynchronizedValues(velocity, 0);
     }
 
