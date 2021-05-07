@@ -233,9 +233,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
-  bullet: {fileID: 4514707055059789189, guid: 596dcf7d3c4118544a5a11ea617c3db2, type: 3}
+  bullet: {fileID: 3844424787005764748, guid: bd2de6ca71ca5a941835a8b5ec5dbb1f, type: 3}
   fireInterval: 2
   power: 10
+  player: {fileID: 3240263036653070329}
 --- !u!1001 &3240263036653101233
 PrefabInstance:
   m_ObjectHideFlags: 0

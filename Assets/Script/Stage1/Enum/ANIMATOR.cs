@@ -2,7 +2,6 @@
     Speed,
     IsGrounded,
     Jump,
-    JumpPower
-
-
+    JumpPower,
+    StandTurnSpeed
 }

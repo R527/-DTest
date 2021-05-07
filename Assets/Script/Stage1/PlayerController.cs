@@ -85,8 +85,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (!Mathf.Approximately(input.x, 0f) || !Mathf.Approximately(input.z, 0f)) {
             rb.MoveRotation(Quaternion.LookRotation(transform.forward + input.normalized));
         }
-
-        //
         if (velocity.magnitude > 0f) {
             float speed = 0f;
             if (Keyboard.current.leftShiftKey.isPressed) {
@@ -98,24 +96,16 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
             //横軸
             if (velocity.x >= 0.1) {
-                Debug.Log("右");
                 rb.MovePosition(rb.position + transform.right * vel);
             } else if(velocity.x <= -0.1) {
-                Debug.Log("左");
                 rb.MovePosition(rb.position - transform.right * vel);
             }
             //縦軸
             if (velocity.z >= 0.1) {
-                Debug.Log("前");
-
                 rb.MovePosition(rb.position + transform.forward * vel);
             } else if (velocity.z <= -0.1) {
-                Debug.Log("うしろ");
                 rb.MovePosition(rb.position - transform.forward * vel);
             }
-
-            //rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
-            //Debug.Log("rb.position + velocity * Time.fixedDeltaTime" + rb.position + velocity * Time.fixedDeltaTime);
         }
     }
 
@@ -140,6 +130,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         
             Move();
             Jump();
+            StandTrunAnimation();
         }
     }
 
@@ -169,6 +160,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
 
 
+
     void Jump() {
 
         //ジャンプ
@@ -192,6 +184,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
         animator.SetFloat(ANIMATOR_TYPE.JumpPower.ToString(), rb.velocity.y);
     }
 
+    void StandTrunAnimation() {
+        if (velocity.magnitude > 0.1f) return;
+
+        float axis = cinemachineVirtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_InputAxisValue;
+
+        animator.SetFloat(ANIMATOR_TYPE.StandTurnSpeed.ToString(), axis);
+
+    }
 
     void CheckGameOver() {
         if (gameManager.GameOver) {
@@ -205,8 +205,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
 
     public void TakeDamege(int dmg) {
-        if (SetHp(playerHp - dmg) <= 0) gameManager.EndGame();
-        lifeGaugeUpdate.UpdateLifeGauge();
+        if (SetHp(playerHp - dmg) <= 0 && photonView.IsMine) gameManager.EndGame();
+        if(photonView.IsMine) lifeGaugeUpdate.UpdateLifeGauge();
     }
 
     int SetHp(int hp) {

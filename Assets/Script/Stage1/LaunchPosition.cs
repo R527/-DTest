@@ -6,9 +6,10 @@ public class LaunchPosition : MonoBehaviour
 {
 
     public GameManager gameManager;
-    public Rigidbody bullet;
+    public Bullet bullet;
     public float fireInterval;
     public float power;
+    public GameObject player;
 
     float checkTime;
 
@@ -29,7 +30,9 @@ public class LaunchPosition : MonoBehaviour
     }
 
     void Fire() {
-        Rigidbody obj = Instantiate(bullet, transform.position, transform.rotation);
-        obj.AddForce(transform.forward * power, ForceMode.Force);
+        Bullet obj = Instantiate(bullet, transform.position, transform.rotation);
+        obj.player = player;
+        obj.gameManager = gameManager;
+        obj.GetComponent<Rigidbody>().AddForce(transform.forward * power, ForceMode.Force);
     }
 }

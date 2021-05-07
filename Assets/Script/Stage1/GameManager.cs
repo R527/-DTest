@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
 
     public void EndGame() {
         GameOver = true;
+        Debug.Log("endgame");
         goToNextBtn.gameObject.SetActive(false);
         gameObject.SetActive(true);
     }

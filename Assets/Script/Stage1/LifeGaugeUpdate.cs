@@ -19,7 +19,6 @@ public class LifeGaugeUpdate : MonoBehaviourPunCallbacks
     }
 
     public void UpdateLifeGauge() {
-
         if (player == null) return;
 
         for (int i = 0; i < transform.childCount; i++) {
