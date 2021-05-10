@@ -12,21 +12,30 @@ public class Enemy : MonoBehaviour {
     public PlayerController playerController;
 
 
-    NavMeshAgent navMeshAgent;
-    Transform playerTrn;
+    [SerializeField] NavMeshAgent navMeshAgent;
+    [SerializeField]Transform playerTrn;
     Animator animator;
-    bool canControl;
+    [SerializeField] bool canControl;
+
+    //etc
+    public bool isTimeChecker;
+    public float atkTime;
 
     // Start is called before the first frame update
     void Start() {
         TryGetComponent(out navMeshAgent);
-        playerTrn = GameObject.Find(OBJECT_TAG_TYPE.Player.ToString()).transform;
         TryGetComponent(out animator);
         canControl = true;
     }
 
     // Update is called once per frame
     void Update() {
+
+        if (playerTrn == null) {
+            playerTrn = GameObject.FindGameObjectWithTag(OBJECT_TAG_TYPE.Player.ToString()).transform;
+            return;
+        }
+
         if (gameManager.isCountDown) return;
         if (!canControl) return;
 
@@ -56,8 +65,15 @@ public class Enemy : MonoBehaviour {
     }
 
 
-    private void OnCollisionEnter(Collision collision) {
-        collision.gameObject.GetComponent<PlayerController>().TakeDamege(attackPower);
+    private void OnCollisionStay(Collision collision) {
+
+        if (atkTime >= 0) {
+            atkTime -= Time.deltaTime;
+        } else if(atkTime < 0) {
+            //collision.gameObject.GetComponent<PlayerController>().TakeDamege(attackPower);
+            atkTime = 1f;
+            return;
+        }
     }
 
 

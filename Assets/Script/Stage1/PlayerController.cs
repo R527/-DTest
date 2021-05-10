@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using Photon.Pun;
 using Cinemachine;
@@ -29,6 +30,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     //PlayerStatus
     public int playerHp;
+    public int defaltHp;
+    public UnityAction<Transform,float> unityAction;
+    public UnityAction<Vector3, CinemachineVirtualCamera, Animator> animationAction;
+
 
     //Camera
     public Transform mainCameraTrn;
@@ -46,6 +51,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
+        unityAction = playerStatusSo.GetMoveEvent(MOVE_TYPE.Straight);
+        unityAction.Invoke(transform, 10);
+        animationAction = playerStatusSo.GetAnimationEvent();
+
+        playerStatusSo.SetUp(defaltHp);
+
         TryGetComponent(out animator);
         TryGetComponent(out rb);
         TryGetComponent(out myCollider);
@@ -130,7 +141,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         
             Move();
             Jump();
-            StandTrunAnimation();
+            //StandTrunAnimation();
+            animationAction.Invoke(velocity, cinemachineVirtualCamera, animator);
         }
     }
 

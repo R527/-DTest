@@ -46,6 +46,7 @@ MonoBehaviour:
   playerStatusSo: {fileID: 11400000, guid: 950c5ecd53d1a0b4f831e759f5bf7420, type: 2}
   lifeGaugeUpdate: {fileID: 0}
   playerHp: 0
+  defaltHp: 10
   mainCameraTrn: {fileID: 0}
   cinemachineVirtualCamera: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
@@ -205,7 +206,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6739311028920150457
 Transform:
   m_ObjectHideFlags: 0
@@ -233,7 +234,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
-  bullet: {fileID: 3844424787005764748, guid: bd2de6ca71ca5a941835a8b5ec5dbb1f, type: 3}
+  bullet: {fileID: 8316787566022489254, guid: bd2de6ca71ca5a941835a8b5ec5dbb1f, type: 3}
   fireInterval: 2
   power: 10
   player: {fileID: 3240263036653070329}

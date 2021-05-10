@@ -6,7 +6,7 @@ public class LaunchPosition : MonoBehaviour
 {
 
     public GameManager gameManager;
-    public Bullet bullet;
+    public GameObject bullet;
     public float fireInterval;
     public float power;
     public GameObject player;
@@ -30,9 +30,9 @@ public class LaunchPosition : MonoBehaviour
     }
 
     void Fire() {
-        Bullet obj = Instantiate(bullet, transform.position, transform.rotation);
-        obj.player = player;
-        obj.gameManager = gameManager;
+        GameObject obj = Instantiate(bullet, transform.position, transform.rotation);
+        obj.GetComponent<Bullet>().player = player;
+        obj.GetComponent<Bullet>().gameManager = gameManager;
         obj.GetComponent<Rigidbody>().AddForce(transform.forward * power, ForceMode.Force);
     }
 }
