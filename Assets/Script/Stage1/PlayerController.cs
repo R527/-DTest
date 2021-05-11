@@ -48,9 +48,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] float doubleJumpPower = 5f;
     [SerializeField] bool isFirstJump;
 
+    public Enemy enemy;
+
+
     // Start is called before the first frame update
     void Start()
     {
+        GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>().playerTrn = transform;
+
         unityAction = playerStatusSo.GetMoveEvent(MOVE_TYPE.Straight);
         unityAction.Invoke(transform, 10);
         animationAction = playerStatusSo.GetAnimationEvent();
@@ -183,8 +188,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
                 isFirstJump = true;
                 Vector3 force = new Vector3(input.normalized.x * moveSpeed, jumpPower, input.normalized.z * moveSpeed);
+                //Vector3 force = new Vector3(transform. * moveSpeed, jumpPower, transform.right.z * moveSpeed);
                 rb.AddForce(force, ForceMode.Impulse);
-                animator.SetTrigger(ANIMATOR_TYPE.Jump.ToString());
+                animator.SetTrigger(ANIMATOR_TYPE.Jump.ToString());//→
             }
         } else if (isFirstJump && jumpAction.triggered) {
             rb.velocity = Vector3.zero;

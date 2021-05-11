@@ -4056,6 +4056,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 100168, guid: b235179bd2a63d1468dd430670338c55, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 400168, guid: b235179bd2a63d1468dd430670338c55, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3
@@ -4138,6 +4142,7 @@ MonoBehaviour:
   gameManager: {fileID: 1113958251}
   attackPower: 2
   playerController: {fileID: 0}
+  navMeshAgent: {fileID: 0}
   playerTrn: {fileID: 0}
   canControl: 0
   isTimeChecker: 0

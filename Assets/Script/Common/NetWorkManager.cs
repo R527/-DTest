@@ -10,6 +10,7 @@ using Photon.Realtime;
 public class NetWorkManager : MonoBehaviourPunCallbacks {
 
     public static NetWorkManager instance;
+    public Enemy enemy;
 
     private void Awake() {
         if (instance == null) {
@@ -40,7 +41,8 @@ public class NetWorkManager : MonoBehaviourPunCallbacks {
         Debug.Log("OnJoinedRoom");
 
         var pos = new Vector3(0, 0, 0);
-        PhotonNetwork.Instantiate("Prefabs/Player", pos, Quaternion.identity);
+
+        GameObject player = PhotonNetwork.Instantiate("Prefabs/Player", pos, Quaternion.identity);
     }
 
 }
