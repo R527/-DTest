@@ -57,6 +57,7 @@ MonoBehaviour:
   jumpPower: 6
   doubleJumpPower: 5
   isFirstJump: 0
+  enemy: {fileID: 0}
 --- !u!114 &1087682862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,7 +65,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3240263036653070329}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
@@ -636,10 +637,10 @@ PrefabInstance:
     - target: {fileID: 9500000, guid: b235179bd2a63d1468dd430670338c55, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 2570762429d614f4fb8349cd300df12d, type: 2}
+      objectReference: {fileID: 9100000, guid: 64f0c12cdc67e7242acdde0efa9e36c2, type: 2}
     - target: {fileID: 9500000, guid: b235179bd2a63d1468dd430670338c55, type: 3}
       propertyPath: m_ApplyRootMotion
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b235179bd2a63d1468dd430670338c55, type: 3}

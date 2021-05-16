@@ -10,7 +10,6 @@ using Photon.Realtime;
 public class NetWorkManager : MonoBehaviourPunCallbacks {
 
     public static NetWorkManager instance;
-    public Enemy enemy;
 
     private void Awake() {
         if (instance == null) {

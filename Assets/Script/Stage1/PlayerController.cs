@@ -54,10 +54,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>().playerTrn = transform;
-
         unityAction = playerStatusSo.GetMoveEvent(MOVE_TYPE.Straight);
         unityAction.Invoke(transform, 10);
+
         animationAction = playerStatusSo.GetAnimationEvent();
 
         playerStatusSo.SetUp(defaltHp);
@@ -77,9 +76,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
         lifeGaugeUpdate = GameObject.FindWithTag("Life").GetComponent<LifeGaugeUpdate>();
-        moveAction = playerInput.currentActionMap.FindAction("Move");
-        jumpAction = playerInput.currentActionMap.FindAction("Jump");
-        runAction = playerInput.currentActionMap.FindAction("Run");
+        //moveAction = playerInput.currentActionMap.FindAction("Move");
+        //jumpAction = playerInput.currentActionMap.FindAction("Jump");
+        //runAction = playerInput.currentActionMap.FindAction("Run");
         isCanControl = true;
 
         SetUpPlayerStatus();
@@ -94,36 +93,49 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         CheckGameOver();
         CheckGround();
-        Action();
+        //Action();
+
+        var horizontal = Input.GetAxis("Horizontal");
+        var vertical = Input.GetAxis("Vertical");
+        var horizontalRotaion = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
+        var velocity = horizontalRotaion * new Vector3(horizontal, 0, vertical).normalized;
+        var speed = Input.GetKey(KeyCode.LeftShift) ? 2 : 1;
+        Debug.Log("speed" + speed);
+        if (velocity.magnitude > 0.5f) {
+            transform.rotation = Quaternion.LookRotation(velocity, Vector3.up);
+        }
+
+        animator.SetFloat("Speed", velocity.magnitude * speed, 0.1f, Time.deltaTime);
+        Jump();
     }
 
-    private void FixedUpdate() {
-        if (!Mathf.Approximately(input.x, 0f) || !Mathf.Approximately(input.z, 0f)) {
-            rb.MoveRotation(Quaternion.LookRotation(transform.forward + input.normalized));
-        }
-        if (velocity.magnitude > 0f) {
-            float speed = 0f;
-            if (Keyboard.current.leftShiftKey.isPressed) {
-                speed = 4f;
-            } else {
-                speed = 2f;
-            }
-            float vel = speed * Time.fixedDeltaTime;
+    //private void FixedUpdate() {
+    //    if (!Mathf.Approximately(input.x, 0f) || !Mathf.Approximately(input.z, 0f)) {
+    //        rb.MoveRotation(Quaternion.LookRotation(transform.forward + input.normalized));
+    //    }
+    //    if (velocity.magnitude > 0f) {
+    //        float speed = 0f;
+    //        if (Keyboard.current.leftShiftKey.isPressed) {
+    //            speed = runSpeed;
+    //        } else {
+    //            speed = moveSpeed;
+    //        }
+    //        float vel = speed * Time.fixedDeltaTime;
 
-            //横軸
-            if (velocity.x >= 0.1) {
-                rb.MovePosition(rb.position + transform.right * vel);
-            } else if(velocity.x <= -0.1) {
-                rb.MovePosition(rb.position - transform.right * vel);
-            }
-            //縦軸
-            if (velocity.z >= 0.1) {
-                rb.MovePosition(rb.position + transform.forward * vel);
-            } else if (velocity.z <= -0.1) {
-                rb.MovePosition(rb.position - transform.forward * vel);
-            }
-        }
-    }
+    //        //横軸
+    //        if (velocity.x >= 0.1) {
+    //            rb.MovePosition(rb.position + transform.right * vel);
+    //        } else if(velocity.x <= -0.1) {
+    //            rb.MovePosition(rb.position - transform.right * vel);
+    //        }
+    //        //縦軸
+    //        if (velocity.z >= 0.1) {
+    //            rb.MovePosition(rb.position + transform.forward * vel);
+    //        } else if (velocity.z <= -0.1) {
+    //            rb.MovePosition(rb.position - transform.forward * vel);
+    //        }
+    //    }
+    //}
 
     void CheckGround() {
         if (isGrounded) return;
@@ -131,9 +143,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (animator.GetFloat(ANIMATOR_TYPE.JumpPower.ToString()) <= -0.1f && Physics.CheckSphere(rb.position, myCollider.radius - 0.1f, LayerMask.GetMask(OBJECT_TAG_TYPE.Ground.ToString()))) {
             isGrounded = true;
             velocity.y = 0f;
+            //Debug.Log("isGrounded True");
         } else {
+            //Debug.Log("isGrounded false");
             isGrounded = false;
         }
+        Debug.Log("isGrounded" + isGrounded);
         animator.SetBool(ANIMATOR_TYPE.IsGrounded.ToString(), isGrounded);
     }
 
@@ -182,7 +197,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         //ジャンプ
         if (isGrounded) {
-            if (jumpAction.triggered) {
+            if (Input.GetKeyDown(KeyCode.Space)) {
                 isGrounded = false;
                 animator.SetBool(ANIMATOR_TYPE.IsGrounded.ToString(), isGrounded);
 
@@ -190,15 +205,18 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 Vector3 force = new Vector3(input.normalized.x * moveSpeed, jumpPower, input.normalized.z * moveSpeed);
                 //Vector3 force = new Vector3(transform. * moveSpeed, jumpPower, transform.right.z * moveSpeed);
                 rb.AddForce(force, ForceMode.Impulse);
-                animator.SetTrigger(ANIMATOR_TYPE.Jump.ToString());//→
+                animator.SetTrigger(ANIMATOR_TYPE.Jump.ToString());
+                Debug.Log("Jump");
             }
-        } else if (isFirstJump && jumpAction.triggered) {
+        } else if (isFirstJump && Input.GetKeyDown(KeyCode.Space)) {
             rb.velocity = Vector3.zero;
             isFirstJump = false;
 
-            Vector3 force = new Vector3(input.normalized.x * moveSpeed, doubleJumpPower, input.normalized.z * moveSpeed);
-            rb.AddForce(force, ForceMode.Impulse);
+            //Vector3 force = new Vector3(input.normalized.x * moveSpeed, doubleJumpPower, input.normalized.z * moveSpeed);
+            //rb.AddForce(force, ForceMode.Impulse);
         }
+        //animator.SetBool(ANIMATOR_TYPE.IsGrounded.ToString(), isGrounded);
+
         animator.SetFloat(ANIMATOR_TYPE.JumpPower.ToString(), rb.velocity.y);
     }
 

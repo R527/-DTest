@@ -25,7 +25,7 @@ MonoBehaviour:
       array:
       - 2
       - 5
-    - ID: 0
+    - ID: 2
       string_data: skill b
       int_data: 2
       double_data: 2.2
@@ -35,7 +35,7 @@ MonoBehaviour:
       array:
       - 3
       - 6
-    - ID: 0
+    - ID: 3
       string_data: skill c
       int_data: 3
       double_data: 3.3
@@ -45,7 +45,7 @@ MonoBehaviour:
       array:
       - 4
       - 5
-    - ID: 0
+    - ID: 4
       string_data: High skill
       int_data: 5
       double_data: 4.4
@@ -55,7 +55,7 @@ MonoBehaviour:
       array:
       - 1
       - 1
-    - ID: 0
+    - ID: 5
       string_data: kori kori
       int_data: 5
       double_data: 5.5
@@ -65,7 +65,7 @@ MonoBehaviour:
       array:
       - 2
       - 4
-    - ID: 0
+    - ID: 6
       string_data: Ho-ho-ho-
       int_data: 12
       double_data: 6.6
@@ -75,7 +75,7 @@ MonoBehaviour:
       array:
       - 4
       - 3
-    - ID: 0
+    - ID: 7
       string_data: Hogehoge-hogehoge-
       int_data: 5
       double_data: 7.7
@@ -97,7 +97,7 @@ MonoBehaviour:
       array:
       - 2
       - 5
-    - ID: 0
+    - ID: 2
       string_data: skill b
       int_data: 2
       double_data: 2.2
@@ -107,7 +107,7 @@ MonoBehaviour:
       array:
       - 3
       - 6
-    - ID: 0
+    - ID: 3
       string_data: skill c
       int_data: 3
       double_data: 3.3
@@ -117,7 +117,7 @@ MonoBehaviour:
       array:
       - 4
       - 5
-    - ID: 0
+    - ID: 4
       string_data: High skill
       int_data: 4
       double_data: 4.4
@@ -127,7 +127,7 @@ MonoBehaviour:
       array:
       - 1
       - 1
-    - ID: 0
+    - ID: 5
       string_data: kori kori
       int_data: 5
       double_data: 5.5
@@ -137,7 +137,7 @@ MonoBehaviour:
       array:
       - 2
       - 4
-    - ID: 0
+    - ID: 6
       string_data: Ho-ho-ho-
       int_data: 6
       double_data: 6.6
@@ -147,7 +147,7 @@ MonoBehaviour:
       array:
       - 4
       - 3
-    - ID: 0
+    - ID: 7
       string_data: Hogehoge-hogehoge-
       int_data: 7
       double_data: 7.7
@@ -169,7 +169,7 @@ MonoBehaviour:
       array:
       - 2
       - 5
-    - ID: 0
+    - ID: 2
       string_data: skill b
       int_data: 2
       double_data: 2.2
@@ -179,7 +179,7 @@ MonoBehaviour:
       array:
       - 3
       - 6
-    - ID: 0
+    - ID: 3
       string_data: skill c
       int_data: 3
       double_data: 3.3
@@ -189,7 +189,7 @@ MonoBehaviour:
       array:
       - 4
       - 5
-    - ID: 0
+    - ID: 4
       string_data: High skill
       int_data: 4
       double_data: 4.4
@@ -199,7 +199,7 @@ MonoBehaviour:
       array:
       - 1
       - 1
-    - ID: 0
+    - ID: 5
       string_data: kori kori
       int_data: 5
       double_data: 5.5
@@ -209,7 +209,7 @@ MonoBehaviour:
       array:
       - 2
       - 4
-    - ID: 0
+    - ID: 6
       string_data: Ho-ho-ho-
       int_data: 6
       double_data: 6.6
@@ -219,7 +219,7 @@ MonoBehaviour:
       array:
       - 4
       - 3
-    - ID: 0
+    - ID: 7
       string_data: Hogehoge-hogehoge-
       int_data: 7
       double_data: 7.7
