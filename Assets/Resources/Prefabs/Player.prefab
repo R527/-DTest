@@ -45,6 +45,7 @@ MonoBehaviour:
   gameManager: {fileID: 0}
   playerStatusSo: {fileID: 11400000, guid: 950c5ecd53d1a0b4f831e759f5bf7420, type: 2}
   lifeGaugeUpdate: {fileID: 0}
+  input: {x: 0, y: 0, z: 0}
   playerHp: 0
   defaltHp: 10
   mainCameraTrn: {fileID: 0}
@@ -52,7 +53,7 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   isGrounded: 1
   isCanControl: 0
-  moveSpeed: 2
+  speed: 0
   runSpeed: 4
   jumpPower: 6
   doubleJumpPower: 5

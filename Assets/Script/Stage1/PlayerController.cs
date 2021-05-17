@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
     Rigidbody rb;
     CapsuleCollider myCollider;
     Animator animator;
-    [SerializeField]Vector3 input;
     PhotonTransformViewClassic photonTransformViewClassic;
 
     //Input
@@ -43,7 +42,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] bool isGrounded;
     [SerializeField] bool isCanControl;
     [SerializeField] float speed;
-    //[SerializeField] float runSpeed = 4f;
+    [SerializeField] float runSpeed = 4f;
     [SerializeField] float jumpPower = 6f;
     [SerializeField] float doubleJumpPower = 5f;
     [SerializeField] bool isFirstJump;
@@ -100,15 +99,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
 
     private void FixedUpdate() {
-        if (!Mathf.Approximately(input.x, 0f) || !Mathf.Approximately(input.z, 0f)) {
-            rb.MoveRotation(Quaternion.LookRotation(transform.forward + input.normalized));
-        }
+        //if (!Mathf.Approximately(input.x, 0f) || !Mathf.Approximately(input.z, 0f)) {
+        //    rb.MoveRotation(Quaternion.LookRotation(transform.forward + input.normalized));
+        //}
 
         var horizontal = Input.GetAxis("Horizontal");
         var vertical = Input.GetAxis("Vertical");
         var horizontalRotaion = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
         velocity = horizontalRotaion * new Vector3(horizontal, 0, vertical).normalized;
-        Debug.Log("velocity" + velocity);
         speed = Input.GetKey(KeyCode.LeftShift) ? 2 : 1;
         if (velocity.magnitude > 0.5f) {
             transform.rotation = Quaternion.LookRotation(velocity, Vector3.up);
@@ -204,8 +202,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 animator.SetBool(ANIMATOR_TYPE.IsGrounded.ToString(), isGrounded);
 
                 isFirstJump = true;
-                Vector3 force = new Vector3(input.normalized.x * speed, jumpPower, input.normalized.z * speed);
-                //Vector3 force = new Vector3(transform. * moveSpeed, jumpPower, transform.right.z * moveSpeed);
+                Vector3 force = new Vector3(0, jumpPower, 0);
                 rb.AddForce(force,ForceMode.Impulse);
                 animator.SetTrigger(ANIMATOR_TYPE.Jump.ToString());
                 Debug.Log("Jump");
@@ -214,7 +211,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             rb.velocity = Vector3.zero;
             isFirstJump = false;
 
-            Vector3 force = new Vector3(input.normalized.x * speed, doubleJumpPower, input.normalized.z * speed);
+            Vector3 force = new Vector3(0, doubleJumpPower, 0);
             rb.AddForce(force, ForceMode.Impulse);
         }
         //animator.SetBool(ANIMATOR_TYPE.IsGrounded.ToString(), isGrounded);
