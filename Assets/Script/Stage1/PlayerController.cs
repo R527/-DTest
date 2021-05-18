@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     CapsuleCollider myCollider;
     Animator animator;
     PhotonTransformViewClassic photonTransformViewClassic;
+    PhotonTransformView photonTransformView;
 
     //Input
     PlayerInput playerInput;
@@ -103,17 +104,20 @@ public class PlayerController : MonoBehaviourPunCallbacks
         //    rb.MoveRotation(Quaternion.LookRotation(transform.forward + input.normalized));
         //}
 
-        var horizontal = Input.GetAxis("Horizontal");
-        var vertical = Input.GetAxis("Vertical");
-        var horizontalRotaion = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
-        velocity = horizontalRotaion * new Vector3(horizontal, 0, vertical).normalized;
-        speed = Input.GetKey(KeyCode.LeftShift) ? 2 : 1;
-        if (velocity.magnitude > 0.5f) {
-            transform.rotation = Quaternion.LookRotation(velocity, Vector3.up);
-            rb.MovePosition(rb.position + velocity * speed * Time.fixedDeltaTime);
-        }
+        if (photonView.IsMine) {
+            var horizontal = Input.GetAxis("Horizontal");
+            var vertical = Input.GetAxis("Vertical");
+            var horizontalRotaion = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
+            velocity = horizontalRotaion * new Vector3(horizontal, 0, vertical).normalized;
+            speed = Input.GetKey(KeyCode.LeftShift) ? 2 : 1;
+            if (velocity.magnitude > 0.5f) {
+                transform.rotation = Quaternion.LookRotation(velocity, Vector3.up);
+                rb.MovePosition(rb.position + velocity * speed * Time.fixedDeltaTime);
+            }
 
-        animator.SetFloat("Speed", velocity.magnitude * speed, 0.1f, Time.deltaTime);
+            animator.SetFloat("Speed", velocity.magnitude * speed, 0.1f, Time.deltaTime);
+        }
+        
         //if (velocity.magnitude > 0f) {
         //    float speed = 0f;
         //    if (Keyboard.current.leftShiftKey.isPressed) {
@@ -162,7 +166,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
             Jump();
             //StandTrunAnimation();
             animationAction.Invoke(velocity, cinemachineVirtualCamera, animator);
-            photonTransformViewClassic.SetSynchronizedValues(velocity, 0);
+            //photonTransformViewClassic.SetSynchronizedValues(velocity, 0);
+            //photonTransformView.SetS
 
         }
     }
@@ -191,7 +196,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     //    transform.rotation = mainCameraTrn.transform.rotation;
     //}
 
-
+    public void RunTest() {
+        Debug.Log("RunTest");
+    }
 
     void Jump() {
 

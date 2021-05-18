@@ -37,8 +37,7 @@ public class PlayerStatusSO : ScriptableObject {
     }
 
     void MoveStraight(Transform tran , float duration) {
-        Debug.Log("MoveStraight");
-        Debug.Log(duration);
+
     }
 
 
@@ -52,7 +51,6 @@ public class PlayerStatusSO : ScriptableObject {
         float axis = cinemachineVirtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_InputAxisValue;
 
         animator.SetFloat(ANIMATOR_TYPE.StandTurnSpeed.ToString(), axis);
-        Debug.Log("StandTrunAnimation");
 
     }
 }

@@ -30,6 +30,21 @@ CapsuleCollider:
   m_Height: 1.6
   m_Direction: 1
   m_Center: {x: 0, y: 0.79, z: 0}
+--- !u!114 &-3819207349839588761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3240263036653070329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
 --- !u!114 &1087682861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,7 +60,6 @@ MonoBehaviour:
   gameManager: {fileID: 0}
   playerStatusSo: {fileID: 11400000, guid: 950c5ecd53d1a0b4f831e759f5bf7420, type: 2}
   lifeGaugeUpdate: {fileID: 0}
-  input: {x: 0, y: 0, z: 0}
   playerHp: 0
   defaltHp: 10
   mainCameraTrn: {fileID: 0}
@@ -108,14 +122,17 @@ MonoBehaviour:
     SynchronizeType: 2
     Name: Speed
   - Type: 9
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: Jump
   - Type: 1
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: JumpPower
   - Type: 4
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: IsGrounded
+  - Type: 1
+    SynchronizeType: 2
+    Name: StandTurnSpeed
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -135,7 +152,7 @@ MonoBehaviour:
   m_SynchronizeAngularVelocity: 0
   m_TeleportEnabled: 0
   m_TeleportIfDistanceGreaterThan: 3
---- !u!114 &6185680782427846162
+--- !u!114 &5565722758797050811
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,6 +160,21 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3240263036653070329}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+--- !u!114 &6185680782427846162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3240263036653070329}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
   m_Name: 
@@ -187,11 +219,26 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 1019602114114610941}
-  - {fileID: 6185680782427846162}
+  - {fileID: 5565722758797050811}
   - {fileID: 1876607810904550657}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &6732923191651719967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3240263036653070329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39d06d0503280e04baa47c7dcf1bc166, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0.1, z: 0}
+  rayRange: 1
+  fieldLayerName: Ground
 --- !u!1 &9103124822542875018
 GameObject:
   m_ObjectHideFlags: 0
