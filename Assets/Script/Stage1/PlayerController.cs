@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 rb.MovePosition(rb.position + velocity * speed * Time.fixedDeltaTime);
             }
 
-            animator.SetFloat("Speed", velocity.magnitude * speed, 0.1f, Time.deltaTime);
+            animator.SetFloat("Speed", velocity.magnitude * speed, 0.1f, Time.fixedDeltaTime);
         }
         
         //if (velocity.magnitude > 0f) {
