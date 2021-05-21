@@ -123,7 +123,7 @@ MonoBehaviour:
   cinemachineVirtualCamera: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
   isGrounded: 1
-  isCanControl: 0
+  isCanControl: 1
   speed: 0
   moveSpeed: 2
   runSpeed: 4

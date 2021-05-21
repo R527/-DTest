@@ -210,6 +210,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         //ジャンプ
         if (isGrounded) {
+            Debug.Log("jump");
             if (Input.GetKeyDown(KeyCode.Space)) {
                 isGrounded = false;
                 animator.SetBool(ANIMATOR_TYPE.IsGrounded.ToString(), isGrounded);

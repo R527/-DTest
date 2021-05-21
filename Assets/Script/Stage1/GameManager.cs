@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 {
 
     public Timer timer;
-    [SerializeField] public bool GameOver { get; set; }
+    [field:SerializeField] public bool GameOver { get; set; }
     [SerializeField] GameManagementData gameManagementData;
     public bool isCountDown { get; set;}
     public PlayerStatusSO playerStatus;
