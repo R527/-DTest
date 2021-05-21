@@ -12,6 +12,8 @@ TagManager:
   - GameManager
   - PlayerCamera
   - Enemy
+  - Grav
+  - DropItem
   layers:
   - Default
   - TransparentFX

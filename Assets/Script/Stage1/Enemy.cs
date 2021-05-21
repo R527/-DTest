@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour {
     public Transform playerTrn;
     Animator animator;
     [SerializeField] bool canControl;
+    Rigidbody rb;
 
     //etc
     public bool isTimeChecker;
@@ -25,6 +26,7 @@ public class Enemy : MonoBehaviour {
     void Start() {
         TryGetComponent(out navMeshAgent);
         TryGetComponent(out animator);
+        TryGetComponent(out rb);
         canControl = true;
     }
 
@@ -63,6 +65,7 @@ public class Enemy : MonoBehaviour {
 
 
     private void OnCollisionStay(Collision collision) {
+
         if (atkTime >= 0) {
             atkTime -= Time.deltaTime;
         } else if(atkTime < 0) {

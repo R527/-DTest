@@ -31,7 +31,7 @@ public class NetWorkManager : MonoBehaviourPunCallbacks {
         Debug.Log("OnConnectedToMaster");
 
         PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions(), TypedLobby.Default);
-        SceneManager.LoadScene("Stage1");
+        //SceneManager.LoadScene("Stage1");
     }
 
 
@@ -39,9 +39,7 @@ public class NetWorkManager : MonoBehaviourPunCallbacks {
         base.OnJoinedRoom();
         Debug.Log("OnJoinedRoom");
 
-        var pos = new Vector3(0, 0, 0);
-
-        GameObject player = PhotonNetwork.Instantiate("Prefabs/Player", pos, Quaternion.identity);
+        PhotonNetwork.Instantiate("Prefabs/Player", Vector3.zero, Quaternion.identity);
     }
 
 }

@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         TryGetComponent(out rb);
         TryGetComponent(out myCollider);
         TryGetComponent(out playerInput);
-        TryGetComponent(out photonTransformViewClassic);
+        //TryGetComponent(out photonTransformViewClassic);
 
         mainCameraTrn = GameObject.FindGameObjectWithTag("MainCamera").transform;
         cinemachineVirtualCamera = GameObject.FindGameObjectWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
@@ -109,10 +109,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
             var vertical = Input.GetAxis("Vertical");
             var horizontalRotaion = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
             velocity = horizontalRotaion * new Vector3(horizontal, 0, vertical).normalized;
-            speed = Input.GetKey(KeyCode.LeftShift) ? 2 : 1;
+            Debug.Log("velocity" + velocity);
+            speed = Input.GetKey(KeyCode.LeftShift) ? 4: 2;
             if (velocity.magnitude > 0.5f) {
                 transform.rotation = Quaternion.LookRotation(velocity, Vector3.up);
                 rb.MovePosition(rb.position + velocity * speed * Time.fixedDeltaTime);
+                Debug.Log("rb.position" + rb.position);
+                Debug.Log("velocity * speed * Time.fixedDeltaTime" + velocity * speed * Time.fixedDeltaTime);
+                Debug.Log("Move");
             }
 
             animator.SetFloat("Speed", velocity.magnitude * speed, 0.1f, Time.fixedDeltaTime);
@@ -140,6 +144,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
         //        rb.MovePosition(rb.position - transform.forward * vel);
         //    }
         //}
+    }
+
+    private void OnTriggerStay(Collider other) {
+        if (other.gameObject.CompareTag("DropItem")) {
+            Destroy(other.gameObject);
+        }
     }
 
     void CheckGround() {
