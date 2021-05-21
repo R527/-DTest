@@ -125,6 +125,7 @@ MonoBehaviour:
   isGrounded: 1
   isCanControl: 0
   speed: 0
+  moveSpeed: 2
   runSpeed: 4
   jumpPower: 6
   doubleJumpPower: 5

@@ -43,7 +43,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] bool isGrounded;
     [SerializeField] bool isCanControl;
     [SerializeField] float speed;
-    [SerializeField] float runSpeed = 4f;
+    [SerializeField] float moveSpeed;
+    [SerializeField] float runSpeed;
     [SerializeField] float jumpPower = 6f;
     [SerializeField] float doubleJumpPower = 5f;
     [SerializeField] bool isFirstJump;
@@ -108,15 +109,16 @@ public class PlayerController : MonoBehaviourPunCallbacks
             var horizontal = Input.GetAxis("Horizontal");
             var vertical = Input.GetAxis("Vertical");
             var horizontalRotaion = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
+            Debug.Log("horizontalRotaion" + horizontalRotaion);
             velocity = horizontalRotaion * new Vector3(horizontal, 0, vertical).normalized;
-            Debug.Log("velocity" + velocity);
-            speed = Input.GetKey(KeyCode.LeftShift) ? 4: 2;
+            //Debug.Log("velocity" + velocity);
+            speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed: moveSpeed;
             if (velocity.magnitude > 0.5f) {
                 transform.rotation = Quaternion.LookRotation(velocity, Vector3.up);
                 rb.MovePosition(rb.position + velocity * speed * Time.fixedDeltaTime);
-                Debug.Log("rb.position" + rb.position);
+                //Debug.Log("rb.position" + rb.position);
                 Debug.Log("velocity * speed * Time.fixedDeltaTime" + velocity * speed * Time.fixedDeltaTime);
-                Debug.Log("Move");
+                //Debug.Log("Move");
             }
 
             animator.SetFloat("Speed", velocity.magnitude * speed, 0.1f, Time.fixedDeltaTime);
