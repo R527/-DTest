@@ -101,24 +101,18 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
 
     private void FixedUpdate() {
-        //if (!Mathf.Approximately(input.x, 0f) || !Mathf.Approximately(input.z, 0f)) {
-        //    rb.MoveRotation(Quaternion.LookRotation(transform.forward + input.normalized));
-        //}
 
         if (photonView.IsMine) {
             var horizontal = Input.GetAxis("Horizontal");
             var vertical = Input.GetAxis("Vertical");
             var horizontalRotaion = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
-            Debug.Log("horizontalRotaion" + horizontalRotaion);
-            velocity = horizontalRotaion * new Vector3(horizontal, 0, vertical).normalized;
-            //Debug.Log("velocity" + velocity);
+            var pos = new Vector3(horizontal, 0, vertical).normalized;
+            velocity = horizontalRotaion * pos;
             speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed: moveSpeed;
             if (velocity.magnitude > 0.5f) {
                 transform.rotation = Quaternion.LookRotation(velocity, Vector3.up);
                 rb.MovePosition(rb.position + velocity * speed * Time.fixedDeltaTime);
-                //Debug.Log("rb.position" + rb.position);
-                Debug.Log("velocity * speed * Time.fixedDeltaTime" + velocity * speed * Time.fixedDeltaTime);
-                //Debug.Log("Move");
+
             }
 
             animator.SetFloat("Speed", velocity.magnitude * speed, 0.1f, Time.fixedDeltaTime);

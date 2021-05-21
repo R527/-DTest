@@ -20,8 +20,8 @@ public class LaunchPosition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameManager.isCountDown || gameManager.GameOver) return;
-
+        //if (gameManager.isCountDown || gameManager.GameOver) return;
+        //Debug.Log("")
         checkTime += Time.deltaTime;
         if (checkTime >= fireInterval) { 
             checkTime = 0f;
@@ -31,8 +31,9 @@ public class LaunchPosition : MonoBehaviour
 
     void Fire() {
         GameObject obj = Instantiate(bullet, transform.position, transform.rotation);
-        obj.GetComponent<Bullet>().player = player;
-        obj.GetComponent<Bullet>().gameManager = gameManager;
+        //obj.GetComponent<Bullet>().player = player;
+        //obj.GetComponent<Bullet>().gameManager = gameManager;
         obj.GetComponent<Rigidbody>().AddForce(transform.forward * power, ForceMode.Force);
+        Debug.Log("Fire");
     }
 }
